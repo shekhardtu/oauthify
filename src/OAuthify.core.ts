@@ -60,6 +60,8 @@ export function listenForOAuthResult(callback: (result: OAuthResult) => void) {
       return;
     }
 
-    callback(event.data);
+    if (event.data.code || event.data.error) {
+      callback(event.data);
+    }
   });
 }

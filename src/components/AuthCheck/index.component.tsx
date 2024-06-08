@@ -19,18 +19,11 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
     '67142922307-7bf4kqhr91usqhosrku0t50ugk4abai1.apps.googleusercontent.com';
   const githubClientId = 'Ov23libLGzp8lez4UILN';
 
-  useEffect(() => {
-    if (onSuccess) {
-      debugger;
-      console.log('Login Success from context:', onSuccess);
-    }
-  }, [onSuccess]);
+  const handleSuccess = (response) => {
+    console.count('hadleSuccess');
 
-  useEffect(() => {
-    if (onFailure) {
-      console.log('Login Failure from context:', onFailure);
-    }
-  }, [onFailure]);
+    console.log('response', response);
+  };
 
   return (
     <>
@@ -50,7 +43,7 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
           <GoogleLoginButton
             clientId={googleClientId}
             redirectUri={redirectUri}
-            variant="serverSide"
+            onSuccess={handleSuccess}
           >
             <div
               style={{
