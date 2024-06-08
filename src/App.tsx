@@ -1,9 +1,8 @@
-import React from 'react'
+import React from 'react';
 
-import './App.css'
+import './App.css';
 import Board from './app/Board/index.page';
-
-
+import OAuthRedirect from './app/OAuthRedirect/index.page';
 
 function App() {
   const [route, setRoute] = React.useState(window.location.pathname);
@@ -26,16 +25,15 @@ function App() {
     case '/board':
       ComponentToRender = <Board />;
       break;
+    case '/oauth-redirect':
+      ComponentToRender = <OAuthRedirect />;
+      break;
     default:
       ComponentToRender = <Board />;
       break;
   }
 
-  return (
-    <>
-      {ComponentToRender}
-    </>
-  )
+  return <>{ComponentToRender}</>;
 }
 
-export default App
+export default App;

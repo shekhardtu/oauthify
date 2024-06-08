@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OAuth Redirect</title>
+    <link rel="stylesheet" href="/path/to/your/styles.css" />
+  </head>
+  <body>
+    <div id="root">Redirecting...</div>
+    <script>
+      window.onload = function () {
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        const state = params.get('state');
+        const error = params.get('error');
+
+        if (code) {
+          window.opener.postMessage({ code }, window.location.origin);
+        } else if (error) {
+          window.opener.postMessage({ error }, window.location.origin);
+        }
+
+        window.close();
+      };
+    </script>
+  </body>
+</html>
