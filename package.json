@@ -3,6 +3,18 @@
   "description": "An auth library for react to login with google and github. It works with redirect url to get the code and then exchange it for the access token with your server side api to get the user details.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "keywords": [
+    "react",
+    "auth",
+    "oauth",
+    "OAuth 2.0",
+    "google",
+    "github",
+    "login",
+    "signin",
+    "signup",
+    "authentication"
+  ],
   "types": "dist/types/index.d.ts",
   "private": false,
   "version": "0.0.8",
