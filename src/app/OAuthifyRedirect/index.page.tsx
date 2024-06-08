@@ -6,12 +6,23 @@ const OAuthifyRedirect: React.FC = () => {
     const code = params.get('code');
     const state = params.get('state');
     const error = params.get('error');
-    const provider = params.get('provider');
+    let provider = '';
+    if (state) {
+      const decodedState = JSON.parse(decodeURIComponent(state));
+      provider = decodedState.provider;
+      // Now you have the provider
+    }
 
     if (code) {
-      window.opener.postMessage({ code, state, provider }, window.location.origin);
+      window.opener.postMessage(
+        { code, state, provider },
+        window.location.origin,
+      );
     } else if (error) {
-      window.opener.postMessage({ error, state, provider }, window.location.origin);
+      window.opener.postMessage(
+        { error, state, provider },
+        window.location.origin,
+      );
     }
     window.close();
   }, []);

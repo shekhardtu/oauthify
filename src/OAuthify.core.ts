@@ -3,9 +3,11 @@ interface OAuthOptions {
   redirectUri: string;
   scope?: string;
   state?: string;
+  provider?: string;
 }
 
 interface OAuthResult {
+  provider?: string;
   code?: string;
   error?: string;
 }
@@ -37,6 +39,7 @@ export function buildAuthUrl(baseUrl: string, options: OAuthOptions): string {
 
 export function handleOAuthCallback(): OAuthResult {
   const params = new URLSearchParams(window.location.search);
+
   const code = params.get('code');
   const error = params.get('error');
 

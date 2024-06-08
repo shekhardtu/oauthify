@@ -21,6 +21,7 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
 
   useEffect(() => {
     if (onSuccess) {
+      debugger;
       console.log('Login Success from context:', onSuccess);
     }
   }, [onSuccess]);

@@ -13,7 +13,7 @@ interface GitHubLoginButtonProps {
   onFailure?: (error: any) => void;
   buttonType?: 'icon' | 'button';
   size?: 'small' | 'medium' | 'large';
-  redirectUri?: string;
+  redirectUri: string;
 }
 
 const GitHubLoginButton: React.FC<GitHubLoginButtonProps> = ({
@@ -28,23 +28,25 @@ const GitHubLoginButton: React.FC<GitHubLoginButtonProps> = ({
   const { setOnFailure, setOnSuccess } = useOAuthify();
   const authWindowRef = useRef<Window | null>(null);
 
-  useEffect(() => {
-    listenForOAuthResult((result) => {
-      if (result.code) {
-        setOnSuccess?.(result.code);
-        onSuccess?.(result.code);
-      } else if (result.error) {
-        setOnFailure?.(result.error);
-        onFailure?.(result.error);
-      }
-    });
-  }, [onSuccess, onFailure, setOnSuccess, setOnFailure]);
+  listenForOAuthResult((result) => {
+    if (result?.code) {
+      setOnSuccess?.(result);
+      onSuccess?.(result);
+    } else if (result.error) {
+      setOnFailure?.(result.error);
+      onFailure?.(result.error);
+    }
+  });
 
   const handleLoginClick = () => {
     const authUrl = buildAuthUrl('https://github.com/login/oauth/authorize', {
       clientId: clientId,
-      redirectUri: redirectUri || window.location.origin,
+      redirectUri: redirectUri,
       scope: 'user:email',
+      state: JSON.stringify({
+        provider: 'github',
+        state: Math.random().toString(36).substring(2),
+      }),
     });
 
     if (authWindowRef.current && !authWindowRef.current.closed) {
