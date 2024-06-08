@@ -1,13 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import { useReactOAuth } from 'src/context/ReactOauth.context';
-
+import { useOAuthify } from 'src/providers/OAuthify.provider';
+import {
+  openOAuthWindow,
+  buildAuthUrl,
+  listenForOAuthResult,
+} from 'src/OAuthify.core';
 declare global {
   interface Window {
     google: any;
   }
 }
-
 interface GoogleLoginButtonProps {
+  clientId: string;
   children?: React.ReactNode;
   onSuccess?: (response: any) => void;
   onFailure?: (error: any) => void;
@@ -18,6 +22,7 @@ interface GoogleLoginButtonProps {
 }
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
+  clientId,
   children,
   onSuccess,
   onFailure,
@@ -26,36 +31,19 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   size = 'medium',
   redirectUri,
 }) => {
-  const { googleClientId, setOnFailure, setOnSuccess } = useReactOAuth();
+  const { setOnFailure, setOnSuccess } = useOAuthify();
   const authWindowRef = useRef<Window | null>(null);
 
   useEffect(() => {
-    const handleCallbackResponse = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin) {
-        return;
+    listenForOAuthResult((result) => {
+      if (result.code) {
+        setOnSuccess?.(result.code);
+        onSuccess?.(result.code);
+      } else if (result.error) {
+        setOnFailure?.(result.error);
+        onFailure?.(result.error);
       }
-
-      const { code, error } = event.data;
-      if (code) {
-        try {
-          setOnSuccess?.(code);
-          onSuccess?.(code);
-        } catch (err) {
-          console.error('Error handling response:', err);
-          setOnFailure?.(err);
-          onFailure?.(err);
-        }
-      } else if (error) {
-        setOnFailure?.(error);
-        onFailure?.(error);
-      }
-    };
-
-    window.addEventListener('message', handleCallbackResponse);
-
-    return () => {
-      window.removeEventListener('message', handleCallbackResponse);
-    };
+    });
   }, [onSuccess, onFailure, setOnSuccess, setOnFailure]);
 
   useEffect(() => {
@@ -72,7 +60,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
       const initializeGoogleLogin = () => {
         try {
           window.google.accounts.id.initialize({
-            client_id: googleClientId,
+            client_id: clientId,
             callback: handleCallbackResponse,
           });
 
@@ -119,7 +107,6 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
       };
     }
   }, [
-    googleClientId,
     onSuccess,
     onFailure,
     setOnSuccess,
@@ -130,22 +117,20 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   ]);
 
   const handleLoginClick = () => {
-    console.log(redirectUri);
     if (variant === 'serverSide') {
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=profile email`;
-      const width = 600;
-      const height = 600;
-      const left = (window.innerWidth - width) / 2;
-      const top = (window.innerHeight - height) / 2;
+      const authUrl = buildAuthUrl(
+        'https://accounts.google.com/o/oauth2/v2/auth',
+        {
+          clientId: clientId,
+          redirectUri: redirectUri || window.location.origin,
+          scope: 'profile email',
+        },
+      );
 
       if (authWindowRef.current && !authWindowRef.current.closed) {
         authWindowRef.current.focus();
       } else {
-        authWindowRef.current = window.open(
-          authUrl,
-          '_blank',
-          `width=${width},height=${height},left=${left},top=${top}`,
-        );
+        authWindowRef.current = openOAuthWindow(authUrl);
       }
     }
   };

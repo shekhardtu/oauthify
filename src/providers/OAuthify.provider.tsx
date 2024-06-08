@@ -1,10 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-interface ReactOAuthContextProps {
+interface OAuthifyContextProps {
     children?: ReactNode;
-    googleClientId?: string;
-
-    githubClientId?: string;
     setOnSuccess?: (response) => void;
     setOnFailure?: (erorr) => void;
     onSuccess?: () => void;
@@ -14,15 +11,14 @@ interface ReactOAuthContextProps {
 
 }
 
-const ReactOAuthContext = createContext<ReactOAuthContextProps | undefined>(undefined);
+const OAuthifyContext = createContext<OAuthifyContextProps | undefined>(undefined);
 
 
 
 
-export const ReactOAuthProvider: React.FC<ReactOAuthContextProps> = ({
+export const OAuthifyProvider: React.FC<OAuthifyContextProps> = ({
     children,
-    googleClientId,
-    githubClientId,
+
 }) => {
 
     const [onSuccess, setOnSuccess] = useState<any>();
@@ -32,9 +28,8 @@ export const ReactOAuthProvider: React.FC<ReactOAuthContextProps> = ({
 
 
     return (
-        <ReactOAuthContext.Provider value={{
-            googleClientId,
-            githubClientId,
+        <OAuthifyContext.Provider value={{
+
             setOnSuccess,
             setOnFailure,
             onSuccess,
@@ -43,14 +38,14 @@ export const ReactOAuthProvider: React.FC<ReactOAuthContextProps> = ({
             loading
         }}>
             {children}
-        </ReactOAuthContext.Provider>
+        </OAuthifyContext.Provider>
     );
 };
 
-export const useReactOAuth = () => {
-    const context = useContext(ReactOAuthContext);
+export const useOAuthify = () => {
+    const context = useContext(OAuthifyContext);
     if (!context) {
-        throw new Error('useReactOAuth must be used within a ReactOAuthProvider');
+        throw new Error('useOAuthify must be used within aOAuthifyProvider');
     }
     return context;
 };

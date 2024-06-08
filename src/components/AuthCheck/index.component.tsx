@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import GoogleLoginButton from '../SocialLogin/Google.component';
-import { useReactOAuth } from 'src/context/ReactOauth.context';
+import { useOAuthify } from 'src/providers/OAuthify.provider';
 import GitHubLoginButton from '../SocialLogin/Github.component';
 import GithubIcon from '../Icons/GithubIcon.svg';
 import GoogleIcon from '../Icons/GoogleIcon.svg';
@@ -12,10 +12,12 @@ interface AuthCheckProps {
 }
 
 const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
-  const { onSuccess, onFailure } = useReactOAuth();
-  const handleSuccess = (response: any) => {
-    console.log('Login Success from component:', response);
-  };
+  const { onSuccess, onFailure } = useOAuthify();
+  const redirectUri = `${window.location.origin}/oauthify-redirect`;
+
+  const googleClientId =
+    '67142922307-7bf4kqhr91usqhosrku0t50ugk4abai1.apps.googleusercontent.com';
+  const githubClientId = 'Ov23libLGzp8lez4UILN';
 
   useEffect(() => {
     if (onSuccess) {
@@ -23,9 +25,11 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
     }
   }, [onSuccess]);
 
-  const handleFailure = (error: any) => {
-    console.error('Login Failure:', error);
-  };
+  useEffect(() => {
+    if (onFailure) {
+      console.log('Login Failure from context:', onFailure);
+    }
+  }, [onFailure]);
 
   return (
     <>
@@ -43,9 +47,8 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
         </div>
         <div className="flex flex-row justify-center items-center my-6 space-x-2">
           <GoogleLoginButton
-            onSuccess={handleSuccess}
-            onFailure={handleFailure}
-            redirectUri={`${window.location.origin}/oauth-redirect`}
+            clientId={googleClientId}
+            redirectUri={redirectUri}
             variant="serverSide"
           >
             <div
@@ -69,9 +72,8 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
           </GoogleLoginButton>
 
           <GitHubLoginButton
-            onSuccess={handleSuccess}
-            onFailure={handleFailure}
-            redirectUri={`${window.location.origin}/oauth-redirect`}
+            redirectUri={redirectUri}
+            clientId={githubClientId}
           >
             <div
               style={{
@@ -87,7 +89,7 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
             >
               <div className="mr-2">
                 {' '}
-                <GithubIcon size={16} />{' '}
+                <GithubIcon size={16} />
               </div>{' '}
               Sign in with GitHub
             </div>
