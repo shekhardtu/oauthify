@@ -7,7 +7,7 @@ import GoogleLoginButton from './components/SocialLogin/Google.component';
 import OAuthRedirect from './app/OAuthifyRedirect/index.page';
 import GoogleIcon from './components/Icons/GoogleIcon.svg';
 import GithubIcon from './components/Icons/GithubIcon.svg';
-
+import { useOAuthify } from './providers/OAuthify.provider';
 export {
   OAuthifyProvider,
   GitHubLoginButton,
@@ -15,4 +15,5 @@ export {
   OAuthRedirect,
   GoogleIcon,
   GithubIcon,
+  useOAuthify,
 };
