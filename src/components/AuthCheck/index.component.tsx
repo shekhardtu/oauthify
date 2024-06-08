@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon';
+
 import GoogleLoginButton from '../SocialLogin/Google.component';
 import { useReactOAuth } from 'src/context/ReactOauth.context';
 import GitHubLoginButton from '../SocialLogin/Github.component';
@@ -31,9 +31,7 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
     <>
       <div className="bg-white px-4 pt-6 mx-auto">
         <div className="flex flex-col justify-center items-center">
-          <div className="flex flex-row justify-center my-6">
-            <DocumentIcon className="h-10 w-10 text-blue-600" />
-          </div>
+          <div className="flex flex-row justify-center my-6">IconSpace</div>
           <div className="flex flex-row justify-center">
             <h3 className="text-lg leading-6 text-gray-900 font-bold mb-2">
               Sign in to {orgName}
