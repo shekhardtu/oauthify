@@ -9,6 +9,8 @@ interface AuthCheckProps {
     orgName?: string;
 }
 
+
+
 const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = "MyApp" }) => {
     const { onSuccess, onFailure } = useReactOAuth();
     const handleSuccess = (response: any) => {
