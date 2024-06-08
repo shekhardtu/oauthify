@@ -61,12 +61,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shekhardtu/coiisy-react.git"
+    "url": "git+https://github.com/shekhardtu/oauthify.git"
   },
   "author": "shekhardtu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/shekhardtu/coiisy-react/issues"
+    "url": "https://github.com/shekhardtu/oauthify/issues"
   },
-  "homepage": "https://github.com/shekhardtu/coiisy-react#readme"
+  "homepage": "https://github.com/shekhardtu/oauthify#readme"
 }
