@@ -1,8 +1,22 @@
 ### OAuthify
 
+The OAuthify library provides a seamless integration for adding OAuth-based login functionality into your React application. This package comes with pre-built headless components for Google and GitHub login buttons, making the OAuth flow implementation straightforward and efficient.
+
+### Key Features
+
+- **Easy Integration:** Simplifies the addition of Google and GitHub login buttons to your React app.
+- **Secure Authentication:** Redirects users to the respective service's login page and securely handles the OAuth callback.
+- **Customizable:** Allows for custom handling of successful or failed logins, enabling you to tailor the user experience.
+
+<!-- ![OAuthify Auth 2.0 headless Component](/src/assets/OAuthify.png) -->
+
+<p align="center">
+  <img src="src/assets/OAuthify.png" alt="OAuthify Auth 2.0 headless Component" width="200">
+</p>
+
 ### Installation
 
-To install the package, run:
+To install OAuthify, run:
 
 ```bash
 npm install oauthify
@@ -10,15 +24,126 @@ npm install oauthify
 
 ### Usage
 
+Implementing OAuthify in your React application involves three simple steps:
+
+1. Wrap your application with `<OAuthifyProvider />`.
+2. Add the `<OAuthifyRedirect />` component to handle the OAuth callback.
+3. Utilize the `<GoogleLoginButton />` or `<GithubLoginButton />` components as needed.
+
+### Detailed Steps
+
+#### OAuthifyProvider
+
+To use the OAuthify Provider, wrap your entire application with `<OAuthifyProvider>`:
+
+```javascript
+import React from 'react';
+import {
+  OAuthifyProvider,
+  GoogleLoginButton,
+  GitHubLoginButton,
+  GoogleIcon,
+  GithubIcon,
+} from 'oauthify';
+const googleClientId = 'xxxxxxxxx';
+const githubClientId = 'XXXXXXXX';
+
+const App = () => {
+  const handleSuccess = (response) => {
+    console.log('Google login success:', response);
+    // Handle successful login, e.g., set user info in app state
+  };
+
+  const handleFailure = (error) => {
+    console.error('Google login failure:', error);
+    // Handle failed login, e.g., show error message to user
+  };
+
+  return (
+    <OAuthifyProvider>
+      <div>
+        <h1>My App</h1>
+        <LoginComponent />
+      </div>
+    </OAuthifyProvider>
+  );
+};
+
+const LoginComponent = () => {
+  return (
+    <>
+      <div className="flex flex-row justify-center items-center my-6 space-x-2">
+        <GoogleLoginButton
+          clientId={googleClientId}
+          redirectUri={redirectUri}
+          onSuccess={handleSuccess}
+          onFailure={handleFailure}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '4px',
+              border: '1px solid #e1e4e8',
+              padding: '6px 12px',
+              fontSize: '14px',
+            }}
+          >
+            <div className="mr-2">
+              {' '}
+              <GoogleIcon size={16} />{' '}
+            </div>{' '}
+            {formType === 'signin' ? 'Sign in' : 'Sign up'} with Google
+          </div>{' '}
+        </GoogleLoginButton>
+
+        <GitHubLoginButton
+          clientId={githubClientId}
+          redirectUri={redirectUri}
+          onSuccess={handleSuccess}
+          onFailure={handleFailure}
+        >
+          >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '4px',
+              border: '1px solid #e1e4e8',
+              padding: '6px 12px',
+              fontSize: '14px',
+            }}
+          >
+            <div className="mr-2">
+              {' '}
+              <GithubIcon size={16} />
+            </div>{' '}
+            {formType === 'signin' ? 'Sign in' : 'Sign up'} with GitHub
+          </div>
+        </GitHubLoginButton>
+      </div>
+    </>
+  );
+};
+
+export default App;
+```
+
+#### NOTE: Please Ensure GoogleLoginButton and GithubLoginButton getting rendered under <OAuthifyProvider/> provider
+
 #### GoogleLoginButton
 
 To use the Google login button:
 
-1. **Import and use the `GoogleLoginButton` component in your React application:**
+1. **Import and use the `GoogleLoginButton` component:**
 
 ```javascript
 import React from 'react';
-import GoogleLoginButton from 'oauthify/GoogleLoginButton';
+import { GoogleLoginButton } from 'oauthify';
 
 const App = () => {
   const handleSuccess = (response) => {
@@ -32,11 +157,10 @@ const App = () => {
   return (
     <div>
       <GoogleLoginButton
-        googleClientId="YOUR_GOOGLE_CLIENT_ID"
-        redirectUri="{base_url}/oauth-redirect"
+        clientId="YOUR_GOOGLE_CLIENT_ID"
+        redirectUri={`${window.location.origin}/oauthify-redirect`}
         onSuccess={handleSuccess}
         onFailure={handleFailure}
-        variant="custom" // or "renderedButton"
       >
         Login with Google
       </GoogleLoginButton>
@@ -49,46 +173,26 @@ export default App;
 
 2. **Add a redirect page to handle the OAuth callback:**
 
-Create `public/oauth-redirect.html`:
+In your router configuration file:
 
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>OAuth Redirect</title>
-    <link rel="stylesheet" href="/path/to/your/styles.css" />
-  </head>
-  <body>
-    <div id="root">Redirecting...</div>
-    <script>
-      window.onload = function () {
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get('code');
-        const error = params.get('error');
+```javascript
+import { OAuthifyRedirect } from 'oauthify';
 
-        if (code) {
-          window.opener.postMessage({ code }, window.location.origin);
-        } else if (error) {
-          window.opener.postMessage({ error }, window.location.origin);
-        }
-
-        window.close();
-      };
-    </script>
-  </body>
-</html>
+{
+  path: '/oauthify-redirect',
+  component: OAuthifyRedirect
+}
 ```
 
 #### GitHubLoginButton
 
 To use the GitHub login button:
 
-1. **Import and use the `GitHubLoginButton` component in your React application:**
+1. **Import and use the `GitHubLoginButton` component:**
 
 ```javascript
 import React from 'react';
-import GitHubLoginButton from 'oauthify/GitHubLoginButton';
+import { GitHubLoginButton } from 'oauthify';
 
 const App = () => {
   const handleSuccess = (response) => {
@@ -102,11 +206,10 @@ const App = () => {
   return (
     <div>
       <GitHubLoginButton
-        githubClientId="YOUR_GITHUB_CLIENT_ID"
-        redirectUri="http://localhost:3000/oauth-redirect"
+        clientId="YOUR_GITHUB_CLIENT_ID"
+        redirectUri={`${window.location.origin}/oauthify-redirect`}
         onSuccess={handleSuccess}
         onFailure={handleFailure}
-        variant="custom" // or "renderedButton"
       >
         Login with GitHub
       </GitHubLoginButton>
@@ -117,16 +220,27 @@ const App = () => {
 export default App;
 ```
 
-2. **Add the same redirect page for handling OAuth callback as described for GoogleLoginButton.**
+2. **Reuse the same redirect page for handling OAuth callback as described for GoogleLoginButton.**
 
 ### Contributions
 
-We welcome contributions! If you would like to contribute, please follow these steps:
+We welcome and appreciate contributions! If you want to contribute, please follow these steps:
 
-1. Fork the repository.
+1. Fork the repository on GitHub.
 2. Create a new branch (`git checkout -b feature/YourFeature`).
 3. Commit your changes (`git commit -am 'Add some feature'`).
 4. Push to the branch (`git push origin feature/YourFeature`).
 5. Open a Pull Request.
 
 We encourage contributions for adding support for other providers, improving documentation, and fixing bugs. If you find this project helpful, please give it a star on GitHub to help others discover it!
+
+### Resources
+
+- **GitHub Repository:** [OAuthify on GitHub](https://github.com/shekhardtu/oauthify)
+- **NPM Package:** [OAuthify on NPM](https://www.npmjs.com/package/oauthify)
+- **Google OAuth Documentation:** [Google Identity Platform](https://developers.google.com/identity/protocols/oauth2)
+- **GitHub OAuth Documentation:** [GitHub OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps)
+
+### License
+
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/shekhardtu/oauthify/blob/main/LICENSE.md) file for details.

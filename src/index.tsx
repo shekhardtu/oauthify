@@ -1,5 +1,5 @@
 // src/index.tsx
-import './App.css';
+
 // import App from './App';
 import { OAuthifyProvider } from './providers/OAuthify.provider';
 import GitHubLoginButton from './components/SocialLogin/Github.component';

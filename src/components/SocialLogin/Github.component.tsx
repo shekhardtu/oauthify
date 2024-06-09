@@ -39,6 +39,7 @@ const GitHubLoginButton: React.FC<GitHubLoginButtonProps> = ({
   });
 
   const handleLoginClick = () => {
+    console.count('handleLoginClick');
     const authUrl = buildAuthUrl('https://github.com/login/oauth/authorize', {
       clientId: clientId,
       redirectUri: redirectUri,

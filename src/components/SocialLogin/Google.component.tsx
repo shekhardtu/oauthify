@@ -28,7 +28,6 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   onFailure,
   redirectUri,
 }) => {
-  console.count('GoogleLoginButtonComp');
   const { setOnFailure, setOnSuccess } = useOAuthify();
   const authWindowRef = useRef<Window | null>(null);
 

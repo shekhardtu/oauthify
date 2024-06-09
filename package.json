@@ -8,16 +8,23 @@
     "auth",
     "oauth",
     "OAuth 2.0",
-    "google",
-    "github",
-    "login",
     "signin",
     "signup",
-    "authentication"
+    "authentication",
+    "React",
+    "OAuth",
+    "Google Login",
+    "GitHub Login",
+    "Authentication",
+    "React Component",
+    "OAuth Provider",
+    "React OAuth",
+    "OAuthify",
+    "Login Button"
   ],
   "types": "dist/types/index.d.ts",
   "private": false,
-  "version": "0.0.14",
+  "version": "0.0.20",
   "type": "module",
   "files": [
     "dist"

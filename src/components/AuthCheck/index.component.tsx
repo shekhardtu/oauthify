@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import GoogleLoginButton from '../SocialLogin/Google.component';
 import { useOAuthify } from 'src/providers/OAuthify.provider';
@@ -13,7 +13,6 @@ interface AuthCheckProps {
 }
 
 const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
-  const { onSuccess, onFailure } = useOAuthify();
   const redirectUri = `${window.location.origin}/oauthify-redirect`;
   const [formType, setFormType] = useState<
     'signin' | 'signup' | 'forgotPassword'
@@ -23,12 +22,11 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
   const defaultGithubClientId = 'githubClientId';
 
   const googleClientId =
-    process.env.REACT_APP_GOOGLE_CLIENT_ID || defaultGoggleClientId;
+    import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID || defaultGoggleClientId;
   const githubClientId =
-    process.env.REACT_APP_GITHUB_CLIENT_ID || defaultGithubClientId;
+    import.meta.env.VITE_REACT_APP_GITHUB_CLIENT_ID || defaultGithubClientId;
 
   const handleSuccess = (response) => {
-    console.count('hadleSuccess');
     console.log('response', response);
   };
 
