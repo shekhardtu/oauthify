@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './App.css';
-import Board from './app/Board/index.page';
+import Demo from './app/Demo/index.page';
 import OAuthifyRedirect from './app/OAuthifyRedirect/index.page';
 
 function App() {
@@ -21,14 +21,14 @@ function App() {
   let ComponentToRender: React.ReactNode = <></>;
 
   switch (route) {
-    case '/board':
-      ComponentToRender = <Board />;
+    case '/demo':
+      ComponentToRender = <Demo />;
       break;
     case '/oauthify-redirect':
       ComponentToRender = <OAuthifyRedirect />;
       break;
     default:
-      ComponentToRender = <Board />;
+      ComponentToRender = <Demo />;
       break;
   }
 

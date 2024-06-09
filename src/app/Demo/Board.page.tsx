@@ -6,7 +6,7 @@ const LoginModal = ({ isLoginModalOpen, setIsLoginModalOpen, children }) => {
     return ModalPortal({
         isOpen: isLoginModalOpen,
         onClose: () => setIsLoginModalOpen(false),
-        children: <div className="bg-white p-4">{children}</div>
+        children: <div className="bg-white">{children}</div>
     });
 }
 

@@ -5,6 +5,7 @@ import { useOAuthify } from 'src/providers/OAuthify.provider';
 import GitHubLoginButton from '../SocialLogin/Github.component';
 import GithubIcon from '../Icons/GithubIcon.svg';
 import GoogleIcon from '../Icons/GoogleIcon.svg';
+import CompanyIcon from '../Icons/Company.svg';
 
 interface AuthCheckProps {
   onClose: () => void;
@@ -14,14 +15,20 @@ interface AuthCheckProps {
 const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
   const { onSuccess, onFailure } = useOAuthify();
   const redirectUri = `${window.location.origin}/oauthify-redirect`;
+  const [formType, setFormType] = useState<
+    'signin' | 'signup' | 'forgotPassword'
+  >('signin');
+
+  const defaultGoggleClientId = 'googleClientId';
+  const defaultGithubClientId = 'githubClientId';
 
   const googleClientId =
-    '67142922307-7bf4kqhr91usqhosrku0t50ugk4abai1.apps.googleusercontent.com';
-  const githubClientId = 'Ov23libLGzp8lez4UILN';
+    process.env.REACT_APP_GOOGLE_CLIENT_ID || defaultGoggleClientId;
+  const githubClientId =
+    process.env.REACT_APP_GITHUB_CLIENT_ID || defaultGithubClientId;
 
   const handleSuccess = (response) => {
     console.count('hadleSuccess');
-
     console.log('response', response);
   };
 
@@ -29,14 +36,17 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
     <>
       <div className="bg-white px-4 pt-6 mx-auto">
         <div className="flex flex-col justify-center items-center">
-          <div className="flex flex-row justify-center my-6">IconSpace</div>
+          <div className="flex flex-row justify-center my-6">
+            <CompanyIcon size={40} />
+          </div>
           <div className="flex flex-row justify-center">
             <h3 className="text-lg leading-6 text-gray-900 font-bold mb-2">
-              Sign in to {orgName}
+              {formType === 'signin' ? 'Sign in' : 'Sign up'} to {orgName}
             </h3>
           </div>
           <div className="flex flex-row justify-between text-sm text-slate-500">
-            Welcome back! Please sign in to your account
+            Welcome back! Please {formType === 'signin' ? 'Sign in' : 'Sign up'}{' '}
+            to your account
           </div>
         </div>
         <div className="flex flex-row justify-center items-center my-6 space-x-2">
@@ -61,7 +71,7 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
                 {' '}
                 <GoogleIcon size={16} />{' '}
               </div>{' '}
-              Sign in with Google
+              {formType === 'signin' ? 'Sign in' : 'Sign up'} with Google
             </div>{' '}
           </GoogleLoginButton>
 
@@ -85,15 +95,23 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
                 {' '}
                 <GithubIcon size={16} />
               </div>{' '}
-              Sign in with GitHub
+              {formType === 'signin' ? 'Sign in' : 'Sign up'} with GitHub
             </div>
           </GitHubLoginButton>
         </div>
       </div>
       <div className="bg-slate-100 px-4 py-3 text-center text-slate-600 text-sm">
-        Don't have an account?{' '}
-        <span className="cursor-pointer" onClick={() => {}}>
-          Sign up
+        {formType === 'signin'
+          ? " Don't have an account?"
+          : 'Already have an account?'}{' '}
+        <span
+          className="cursor-pointer"
+          onClick={() => {
+            if (formType === 'signin') setFormType('signup');
+            if (formType === 'signup') setFormType('signin');
+          }}
+        >
+          {formType === 'signin' ? 'Sign up' : 'Sign in'}
         </span>
       </div>
     </>

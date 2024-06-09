@@ -1,11 +1,11 @@
-### Authify
+### OAuthify
 
 ### Installation
 
 To install the package, run:
 
 ```bash
-npm install authify
+npm install oauthify
 ```
 
 ### Usage
@@ -18,7 +18,7 @@ To use the Google login button:
 
 ```javascript
 import React from 'react';
-import GoogleLoginButton from 'authify/GoogleLoginButton';
+import GoogleLoginButton from 'oauthify/GoogleLoginButton';
 
 const App = () => {
   const handleSuccess = (response) => {
@@ -88,7 +88,7 @@ To use the GitHub login button:
 
 ```javascript
 import React from 'react';
-import GitHubLoginButton from 'authify/GitHubLoginButton';
+import GitHubLoginButton from 'oauthify/GitHubLoginButton';
 
 const App = () => {
   const handleSuccess = (response) => {

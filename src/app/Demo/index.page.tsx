@@ -2,7 +2,7 @@ import React from 'react';
 import BoardPage from './Board.page';
 import { OAuthifyProvider } from 'src/providers/OAuthify.provider';
 
-const Board: React.FC = () => {
+const Demo: React.FC = () => {
   return (
     <OAuthifyProvider>
       <BoardPage />
@@ -10,4 +10,4 @@ const Board: React.FC = () => {
   );
 };
 
-export default Board;
+export default Demo;
