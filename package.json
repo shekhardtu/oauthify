@@ -24,11 +24,7 @@
   ],
   "types": "dist/types/index.d.ts",
   "private": false,
-<<<<<<< HEAD
-  "version": "0.0.20",
-=======
   "version": "0.0.24",
->>>>>>> e254e27 (updated readme)
   "type": "module",
   "files": [
     "dist"
