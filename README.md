@@ -8,11 +8,15 @@ The OAuthify library provides a seamless integration for adding OAuth-based logi
 - **Secure Authentication:** Redirects users to the respective service's login page and securely handles the OAuth callback.
 - **Customizable:** Allows for custom handling of successful or failed logins, enabling you to tailor the user experience.
 
+<<<<<<< HEAD
 <!-- ![OAuthify Auth 2.0 headless Component](/src/assets/OAuthify.png) -->
 
 <p align="center">
   <img src="src/assets/OAuthify.png" alt="OAuthify Auth 2.0 headless Component" width="200">
 </p>
+=======
+![OAuthify Auth 2.0 headless Component](/src/assets/OAuthify.png)
+>>>>>>> e254e27 (updated readme)
 
 ### Installation
 
@@ -45,10 +49,16 @@ import {
   GoogleIcon,
   GithubIcon,
 } from 'oauthify';
+<<<<<<< HEAD
+=======
+import { useAuth } from './contexts/Auth.context';
+
+>>>>>>> e254e27 (updated readme)
 const googleClientId = 'xxxxxxxxx';
 const githubClientId = 'XXXXXXXX';
 
 const App = () => {
+<<<<<<< HEAD
   const handleSuccess = (response) => {
     console.log('Google login success:', response);
     // Handle successful login, e.g., set user info in app state
@@ -59,6 +69,8 @@ const App = () => {
     // Handle failed login, e.g., show error message to user
   };
 
+=======
+>>>>>>> e254e27 (updated readme)
   return (
     <OAuthifyProvider>
       <div>
@@ -70,6 +82,7 @@ const App = () => {
 };
 
 const LoginComponent = () => {
+<<<<<<< HEAD
   return (
     <>
       <div className="flex flex-row justify-center items-center my-6 space-x-2">
@@ -79,6 +92,28 @@ const LoginComponent = () => {
           onSuccess={handleSuccess}
           onFailure={handleFailure}
         >
+=======
+  const { onSuccess, onFailure, setOnSuccess } = useOAuthify();
+
+  const handleSuccess = () => {
+    // Handle the success state of LoginWithGoogle or LoginWithGithub
+  };
+  const handleFailure = () => {
+    // Handle the success state of LoginWithGoogle or LoginWithGithub
+  };
+
+  React.useEffect(() => {
+    handleSuccess();
+  }, [onSuccess]);
+
+  React.useEffect(() => {
+    handleFailure();
+  }, [onFailure]);
+  return (
+    <>
+      <div className="flex flex-row justify-center items-center my-6 space-x-2">
+        <GoogleLoginButton clientId={googleClientId} redirectUri={redirectUri}>
+>>>>>>> e254e27 (updated readme)
           <div
             style={{
               display: 'flex',
@@ -99,12 +134,16 @@ const LoginComponent = () => {
           </div>{' '}
         </GoogleLoginButton>
 
+<<<<<<< HEAD
         <GitHubLoginButton
           clientId={githubClientId}
           redirectUri={redirectUri}
           onSuccess={handleSuccess}
           onFailure={handleFailure}
         >
+=======
+        <GitHubLoginButton clientId={githubClientId} redirectUri={redirectUri}>
+>>>>>>> e254e27 (updated readme)
           >
           <div
             style={{
