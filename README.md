@@ -236,6 +236,7 @@ We encourage contributions for adding support for other providers, improving doc
 ### Resources
 
 - **GitHub Repository:** [OAuthify on GitHub](https://github.com/shekhardtu/oauthify)
+- **Github Auth Library** [Github on NPM](https://www.npmjs.com/package/github-auth-library)
 - **NPM Package:** [OAuthify on NPM](https://www.npmjs.com/package/oauthify)
 - **Google OAuth Documentation:** [Google Identity Platform](https://developers.google.com/identity/protocols/oauth2)
 - **GitHub OAuth Documentation:** [GitHub OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps)

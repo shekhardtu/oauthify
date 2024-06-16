@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import GoogleLoginButton from '../SocialLogin/Google.component';
 import { useOAuthify } from 'src/providers/OAuthify.provider';
-import GitHubLoginButton from '../SocialLogin/Github.component';
+import { OAuthError, OAuthResult } from 'src/types/oauthify';
+import CompanyIcon from '../Icons/Company.svg';
 import GithubIcon from '../Icons/GithubIcon.svg';
 import GoogleIcon from '../Icons/GoogleIcon.svg';
-import CompanyIcon from '../Icons/Company.svg';
+import GitHubLoginButton from '../SocialLogin/Github.component';
+import GoogleLoginButton from '../SocialLogin/Google.component';
 
 interface AuthCheckProps {
   onClose: () => void;
@@ -13,6 +14,7 @@ interface AuthCheckProps {
 }
 
 const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
+  const { onSuccess, onFailure } = useOAuthify();
   const redirectUri = `${window.location.origin}/oauthify-redirect`;
   const [formType, setFormType] = useState<
     'signin' | 'signup' | 'forgotPassword'
@@ -26,9 +28,17 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
   const githubClientId =
     import.meta.env.VITE_REACT_APP_GITHUB_CLIENT_ID || defaultGithubClientId;
 
-  const handleSuccess = (response) => {
-    console.log('response', response);
+  const handleSuccess = (response: OAuthResult) => {
+    console.count('Auth success');
   };
+
+  const handleFailure = (error: OAuthError) => {
+    console.count('Auth failure');
+  };
+
+  useEffect(() => {
+console.log('AuthCheck mounted');
+  }, [onSuccess]);
 
   return (
     <>
@@ -76,6 +86,8 @@ const AuthCheck: React.FC<AuthCheckProps> = ({ orgName = 'MyApp' }) => {
           <GitHubLoginButton
             redirectUri={redirectUri}
             clientId={githubClientId}
+            onSuccess={handleSuccess}
+            onFailure={handleFailure}
           >
             <div
               style={{

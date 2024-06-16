@@ -1,25 +1,19 @@
 import React, { useEffect, useRef } from 'react';
-import { useOAuthify } from 'src/providers/OAuthify.provider';
 import {
-  openOAuthWindow,
   buildAuthUrl,
   listenForOAuthResult,
+  openOAuthWindow,
 } from 'src/OAuthify.core';
+import { useOAuthify } from 'src/providers/OAuthify.provider';
+import { GoogleLoginButtonProps, OAuthError } from 'src/types/oauthify';
 declare global {
   interface Window {
     google: any;
   }
 }
-interface GoogleLoginButtonProps {
-  clientId: string;
-  children?: React.ReactNode;
-  onSuccess?: (response: any) => void;
-  onFailure?: (error: any) => void;
-  variant?: 'singleTouch' | 'renderedView' | 'serverSide';
-  buttonType?: 'icon' | 'button';
-  size?: 'small' | 'medium' | 'large';
-  redirectUri: string;
-}
+
+
+
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   clientId,
@@ -27,21 +21,36 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   onSuccess,
   onFailure,
   redirectUri,
+  buttonType = 'button',
+  size = 'medium',
 }) => {
   const { setOnFailure, setOnSuccess } = useOAuthify();
   const authWindowRef = useRef<Window | null>(null);
 
   useEffect(() => {
-    listenForOAuthResult((result) => {
-      if (result?.code) {
-        setOnSuccess?.(result);
-        onSuccess?.(result);
+    const cleanup = listenForOAuthResult((result) => {
+      if (result?.code && result.provider) {
+        const response = {
+          ...result,
+          provider: result.provider,
+          code: result.code
+        };
+        setOnSuccess?.(response);
+        onSuccess?.(response);
       } else if (result.error) {
-        setOnFailure?.(result);
-        onFailure?.(result);
+        const error: OAuthError = {
+          ...result,
+          error: result.error,
+        };
+        setOnFailure?.(error);
+        onFailure?.(error);
       }
     });
-  }, []);
+
+    return () => {
+      cleanup?.();
+    };
+  }, [onSuccess, onFailure, setOnSuccess, setOnFailure]);
 
   const handleLoginClick = () => {
     const authUrl = buildAuthUrl(

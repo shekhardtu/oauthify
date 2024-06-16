@@ -1,20 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { useOAuthify } from 'src/providers/OAuthify.provider';
 import {
-  openOAuthWindow,
   buildAuthUrl,
   listenForOAuthResult,
+  openOAuthWindow,
 } from 'src/OAuthify.core';
+import { useOAuthify } from 'src/providers/OAuthify.provider';
+import { GitHubLoginButtonProps, OAuthError, OAuthResult } from 'src/types/oauthify';
 
-interface GitHubLoginButtonProps {
-  clientId: string;
-  children?: React.ReactNode;
-  onSuccess?: (response: any) => void;
-  onFailure?: (error: any) => void;
-  buttonType?: 'icon' | 'button';
-  size?: 'small' | 'medium' | 'large';
-  redirectUri: string;
-}
+
 
 const GitHubLoginButton: React.FC<GitHubLoginButtonProps> = ({
   clientId,
@@ -27,19 +20,36 @@ const GitHubLoginButton: React.FC<GitHubLoginButtonProps> = ({
 }) => {
   const { setOnFailure, setOnSuccess } = useOAuthify();
   const authWindowRef = useRef<Window | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
 
-  listenForOAuthResult((result) => {
-    if (result?.code) {
-      setOnSuccess?.(result);
-      onSuccess?.(result);
-    } else if (result.error) {
-      setOnFailure?.(result.error);
-      onFailure?.(result.error);
+  useEffect(() => {
+    if (!cleanupRef.current) {
+      cleanupRef.current = listenForOAuthResult((result: OAuthResult | OAuthError) => {
+        if ('code' in result) {
+          const response = {
+            ...result,
+            provider: result.provider,
+            code: result.code
+          };
+          setOnSuccess?.(response);
+          onSuccess?.(response);
+        } else {
+          const error = result as OAuthError;
+          setOnFailure?.(error);
+          onFailure?.(error);
+        }
+      });
     }
-  });
+
+    return () => {
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
+      }
+    };
+  }, [onSuccess, onFailure, setOnSuccess, setOnFailure]);
 
   const handleLoginClick = () => {
-    console.count('handleLoginClick');
     const authUrl = buildAuthUrl('https://github.com/login/oauth/authorize', {
       clientId: clientId,
       redirectUri: redirectUri,

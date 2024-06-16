@@ -1,11 +1,18 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { OAuthError } from 'src/types/oauthify';
+interface SocialSignInResponse {
+  provider: string;
+  code: string;
+  redirectUri?: string;
+  payload?: any;
+}
 
-interface OAuthifyContextProps {
+interface OAuthifyContextProps<TSuccess = SocialSignInResponse, TError = OAuthError> {
   children?: ReactNode;
-  setOnSuccess?: (response) => void;
-  setOnFailure?: (erorr) => void;
-  onSuccess?: () => void;
-  onFailure?: () => void;
+  setOnSuccess?: (response: TSuccess) => void;
+  setOnFailure?: (error: TError) => void;
+  onSuccess?: TSuccess | ((response: TSuccess) => void);
+  onFailure?: TError | ((error: TError) => void);
   setLoading?: (loading: boolean) => void;
   loading?: boolean;
 }
@@ -17,8 +24,8 @@ const OAuthifyContext = createContext<OAuthifyContextProps | undefined>(
 export const OAuthifyProvider: React.FC<OAuthifyContextProps> = ({
   children,
 }) => {
-  const [onSuccess, setOnSuccess] = useState<any>();
-  const [onFailure, setOnFailure] = useState<any>();
+  const [onSuccess, setOnSuccess] = useState<SocialSignInResponse | ((response: SocialSignInResponse) => void)>();
+  const [onFailure, setOnFailure] = useState<OAuthError | ((error: OAuthError) => void)>();
   const [loading, setLoading] = useState<boolean>(false);
 
   return (
