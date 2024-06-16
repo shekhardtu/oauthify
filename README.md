@@ -144,6 +144,7 @@ import React from 'react';
 import { GoogleLoginButton } from 'oauthify';
 
 const App = () => {
+  // Use any of the ways to handle the success and failed state either the prop method or context hook
   const handleSuccess = (response) => {
     console.log('Google login success:', response);
   };
