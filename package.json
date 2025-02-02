@@ -24,7 +24,7 @@
   ],
   "types": "dist/types/index.d.ts",
   "private": false,
-  "version": "0.0.28",
+  "version": "0.0.32",
   "type": "module",
   "files": [
     "dist"
@@ -50,6 +50,7 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.0",
     "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-terser": "^0.4.0",
     "@rollup/plugin-multi-entry": "^6.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
@@ -68,7 +69,6 @@
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
-    "@rollup/plugin-terser": "^0.4.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5",

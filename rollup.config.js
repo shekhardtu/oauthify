@@ -1,18 +1,18 @@
 // rollup.config.js
-import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import resolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-import typescript from "rollup-plugin-typescript2";
-import postcss from "rollup-plugin-postcss";
-import url from "@rollup/plugin-url";
-import { babel } from "@rollup/plugin-babel";
 import alias from "@rollup/plugin-alias";
+import { babel } from "@rollup/plugin-babel";
+import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
+import resolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
+import terser from "@rollup/plugin-terser";
+import url from "@rollup/plugin-url";
 import path from "path";
-import { fileURLToPath } from "url";
-import { terser } from "rollup-plugin-terser";
 import analyze from "rollup-plugin-analyzer";
+import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import postcss from "rollup-plugin-postcss";
+import typescript from "rollup-plugin-typescript2";
+import { fileURLToPath } from "url";
 
 // Get the directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
