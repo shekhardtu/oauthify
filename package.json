@@ -3,6 +3,16 @@
   "description": "An auth library for react to login with google and github. It works with redirect url to get the code and then exchange it for the access token with your server side api to get the user details.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "unpkg": "dist/umd/oauthify.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./css": "./dist/oauthify.css"
+  },
+  "sideEffects": false,
   "keywords": [
     "react",
     "auth",
@@ -24,7 +34,7 @@
   ],
   "types": "dist/types/index.d.ts",
   "private": false,
-  "version": "0.0.35",
+  "version": "0.0.36",
   "type": "module",
   "files": [
     "dist"
@@ -38,12 +48,13 @@
     "prepublishOnly": "git add . && git commit --amend --no-edit && rm -rf dist && npm run rollup",
     "nuke": "rm -rf node_modules && rm -rf dist && npm install"
   },
-  "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",
+    "@babel/preset-env": "^7.28.3",
     "@babel/preset-react": "^7.24.6",
     "@babel/preset-typescript": "^7.24.6",
     "@rollup/plugin-alias": "^5.1.0",

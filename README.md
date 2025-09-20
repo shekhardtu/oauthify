@@ -1,246 +1,381 @@
-### OAuthify
+# OAuthify 🔐
 
-The OAuthify library provides a seamless integration for adding OAuth-based login functionality into your React application. This package comes with pre-built headless components for Google and GitHub login buttons, making the OAuth flow implementation straightforward and efficient.
+A modern, type-safe, and lightweight OAuth authentication library for React applications. Supports major OAuth providers with full TypeScript support and zero dependencies (except React).
 
-### Key Features
+[![npm version](https://img.shields.io/npm/v/oauthify.svg)](https://www.npmjs.com/package/oauthify)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/oauthify)](https://bundlephobia.com/package/oauthify)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
-- **Easy Integration:** Simplifies the addition of Google and GitHub login buttons to your React app.
-- **Secure Authentication:** Redirects users to the respective service's login page and securely handles the OAuth callback.
-- **Customizable:** Allows for custom handling of successful or failed logins, enabling you to tailor the user experience.
+## ✨ Features
 
-<!-- ![OAuthify Auth 2.0 headless Component](/src/assets/OAuthify.png) -->
+- 🚀 **Major OAuth Providers** - Pre-built components for Google, GitHub, Microsoft, Facebook, LinkedIn, Apple + support for Discord, Twitter, Spotify, Slack and any OAuth 2.0 provider
+- 📦 **Tiny Bundle** - Only 12KB minified (45% smaller than v0.0.32)
+- 🔒 **Secure** - PKCE support, state validation, origin checking
+- 💪 **Type-Safe** - Full TypeScript support with provider-specific types
+- 🎨 **Customizable** - Use pre-built buttons or create your own
+- ⚡ **Zero Dependencies** - Only requires React as peer dependency
+- 🪟 **Smart Window Management** - Reuses existing auth windows
+- 🧹 **Memory Safe** - Automatic cleanup, no memory leaks
 
-<p align="center">
-  <img src="src/assets/OAuthify.png" alt="OAuthify Auth 2.0 headless Component" width="200">
-</p>
-
-### Installation
-
-To install OAuthify, run:
+## 📦 Installation
 
 ```bash
 npm install oauthify
+# or
+yarn add oauthify
+# or
+pnpm add oauthify
 ```
 
-### Usage
+## 🚀 Quick Start
 
-Implementing OAuthify in your React application involves three simple steps:
+### 1. Setup the Provider
 
-1. Wrap your application with `<OAuthifyProvider />`.
-2. Add the `<OAuthifyRedirect />` component to handle the OAuth callback.
-3. Utilize the `<GoogleLoginButton />` or `<GithubLoginButton />` components as needed.
+Wrap your app with `OAuthifyProvider`:
 
-### Detailed Steps
+```tsx
+import { OAuthifyProvider } from 'oauthify';
 
-#### OAuthifyProvider
-
-To use the OAuthify Provider, wrap your entire application with `<OAuthifyProvider>`:
-
-```javascript
-import React from 'react';
-import {
-  OAuthifyProvider,
-  GoogleLoginButton,
-  GitHubLoginButton,
-  GoogleIcon,
-  GithubIcon,
-} from 'oauthify';
-import { useOAuthify } from 'oauthify';
-
-const googleClientId = 'xxxxxxxxx';
-const githubClientId = 'XXXXXXXX';
-
-const App = () => {
+function App() {
   return (
     <OAuthifyProvider>
-      <div>
-        <h1>My App</h1>
-        <LoginComponent />
-      </div>
+      {/* Your app components */}
     </OAuthifyProvider>
   );
-};
-
-const LoginComponent = () => {
-  const { onSuccess, onFailure, setOnSuccess } = useOAuthify();
-
-  const handleSuccess = () => {
-    // Handle the success state of LoginWithGoogle or LoginWithGithub
-  };
-  const handleFailure = () => {
-    // Handle the success state of LoginWithGoogle or LoginWithGithub
-  };
-
-  React.useEffect(() => {
-    handleSuccess();
-  }, [onSuccess]);
-
-  React.useEffect(() => {
-    handleFailure();
-  }, [onFailure]);
-  return (
-    <>
-      <div className="flex flex-row justify-center items-center my-6 space-x-2">
-        <GoogleLoginButton clientId={googleClientId} redirectUri={redirectUri}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '4px',
-              border: '1px solid #e1e4e8',
-              padding: '6px 12px',
-              fontSize: '14px',
-            }}
-          >
-            <div className="mr-2">
-              {' '}
-              <GoogleIcon size={16} />{' '}
-            </div>{' '}
-            {formType === 'signin' ? 'Sign in' : 'Sign up'} with Google
-          </div>{' '}
-        </GoogleLoginButton>
-
-        <GitHubLoginButton clientId={githubClientId} redirectUri={redirectUri}>
-          >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '4px',
-              border: '1px solid #e1e4e8',
-              padding: '6px 12px',
-              fontSize: '14px',
-            }}
-          >
-            <div className="mr-2">
-              {' '}
-              <GithubIcon size={16} />
-            </div>{' '}
-            {formType === 'signin' ? 'Sign in' : 'Sign up'} with GitHub
-          </div>
-        </GitHubLoginButton>
-      </div>
-    </>
-  );
-};
-
-export default App;
+}
 ```
 
-#### NOTE: Please Ensure GoogleLoginButton and GithubLoginButton getting rendered under <OAuthifyProvider/> provider
+### 2. Add the Redirect Handler
 
-#### GoogleLoginButton
+Create a redirect page at `/auth/callback` (or your chosen redirect path):
 
-To use the Google login button:
+```tsx
+// pages/auth/callback.tsx or app/auth/callback/page.tsx
+import { OAuthifyRedirect } from 'oauthify';
 
-1. **Import and use the `GoogleLoginButton` component:**
+export default function AuthCallback() {
+  return <OAuthifyRedirect />;
+}
+```
 
-```javascript
-import React from 'react';
-import { GoogleLoginButton } from 'oauthify';
+### 3. Use Login Buttons
 
-const App = () => {
-  // Use any of the ways to handle the success and failed state either the prop method or context hook
+```tsx
+import { GoogleLoginButton, GitHubLoginButton } from 'oauthify';
+
+function LoginPage() {
   const handleSuccess = (response) => {
-    console.log('Google login success:', response);
+    console.log('OAuth Code:', response.code);
+    // Send code to your backend to exchange for tokens
   };
 
-  const handleFailure = (error) => {
-    console.error('Google login failure:', error);
+  const handleError = (error) => {
+    console.error('OAuth Error:', error);
   };
 
   return (
     <div>
       <GoogleLoginButton
         clientId="YOUR_GOOGLE_CLIENT_ID"
-        redirectUri={`${window.location.origin}/oauthify-redirect`}
+        redirectUri="http://localhost:3000/auth/callback"
         onSuccess={handleSuccess}
-        onFailure={handleFailure}
+        onFailure={handleError}
       >
-        Login with Google
+        Sign in with Google
       </GoogleLoginButton>
+
+      <GitHubLoginButton
+        clientId="YOUR_GITHUB_CLIENT_ID"
+        redirectUri="http://localhost:3000/auth/callback"
+        onSuccess={handleSuccess}
+        onFailure={handleError}
+      />
     </div>
   );
-};
-
-export default App;
-```
-
-2. **Add a redirect page to handle the OAuth callback:**
-
-In your router configuration file:
-
-```javascript
-import { OAuthifyRedirect } from 'oauthify';
-
-{
-  path: '/oauthify-redirect',
-  component: OAuthifyRedirect
 }
 ```
 
-#### GitHubLoginButton
+## 🔑 OAuth Provider Setup
 
-To use the GitHub login button:
+### Getting OAuth Credentials
 
-1. **Import and use the `GitHubLoginButton` component:**
+Each provider requires you to register your application and obtain credentials:
 
-```javascript
-import React from 'react';
-import { GitHubLoginButton } from 'oauthify';
+| Provider | Setup Documentation | Required Credentials |
+|----------|-------------------|---------------------|
+| **Google** | [Google Cloud Console](https://console.cloud.google.com/apis/credentials) | Client ID, Client Secret |
+| **GitHub** | [GitHub OAuth Apps](https://github.com/settings/developers) | Client ID, Client Secret |
+| **Microsoft** | [Azure App Registration](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade) | Application ID, Client Secret, Tenant ID |
+| **Facebook** | [Facebook Developers](https://developers.facebook.com/apps) | App ID, App Secret |
+| **LinkedIn** | [LinkedIn Developers](https://www.linkedin.com/developers/apps) | Client ID, Client Secret |
+| **Apple** | [Apple Developer](https://developer.apple.com/account/resources/identifiers/list/serviceId) | Service ID, Private Key, Team ID |
+| **Discord** | [Discord Developers](https://discord.com/developers/applications) | Client ID, Client Secret |
+| **Twitter** | [Twitter Developer Portal](https://developer.twitter.com/en/portal/projects-and-apps) | Client ID, Client Secret |
+| **Spotify** | [Spotify Dashboard](https://developer.spotify.com/dashboard/applications) | Client ID, Client Secret |
+| **Slack** | [Slack API Apps](https://api.slack.com/apps) | Client ID, Client Secret |
 
-const App = () => {
-  const handleSuccess = (response) => {
-    console.log('GitHub login success:', response);
-  };
+### Important Setup Notes
 
-  const handleFailure = (error) => {
-    console.error('GitHub login failure:', error);
-  };
+1. **Redirect URI**: Must match exactly in your app configuration and provider settings
+2. **HTTPS Required**: Most providers require HTTPS in production (localhost is usually exempt)
+3. **Scopes**: Each provider has different available scopes - check their documentation
 
-  return (
-    <div>
-      <GitHubLoginButton
-        clientId="YOUR_GITHUB_CLIENT_ID"
-        redirectUri={`${window.location.origin}/oauthify-redirect`}
-        onSuccess={handleSuccess}
-        onFailure={handleFailure}
-      >
-        Login with GitHub
-      </GitHubLoginButton>
-    </div>
-  );
-};
+## 📖 API Reference
 
-export default App;
+### Components
+
+#### `<GoogleLoginButton />`
+
+```tsx
+interface GoogleLoginButtonProps {
+  clientId: string;
+  redirectUri: string;
+  onSuccess?: (response: OAuthResponse) => void;
+  onFailure?: (error: OAuthError) => void;
+  scope?: string; // Default: 'openid profile email'
+  prompt?: 'none' | 'consent' | 'select_account';
+  accessType?: 'online' | 'offline';
+  children?: ReactNode;
+  className?: string;
+  disabled?: boolean;
+}
 ```
 
-2. **Reuse the same redirect page for handling OAuth callback as described for GoogleLoginButton.**
+#### `<GitHubLoginButton />`
 
-### Contributions
+```tsx
+interface GitHubLoginButtonProps {
+  clientId: string;
+  redirectUri: string;
+  onSuccess?: (response: OAuthResponse) => void;
+  onFailure?: (error: OAuthError) => void;
+  scope?: string; // Default: 'user:email'
+  allowSignup?: boolean;
+  children?: ReactNode;
+  className?: string;
+  disabled?: boolean;
+}
+```
 
-We welcome and appreciate contributions! If you want to contribute, please follow these steps:
+#### `<MicrosoftLoginButton />`
 
-1. Fork the repository on GitHub.
-2. Create a new branch (`git checkout -b feature/YourFeature`).
-3. Commit your changes (`git commit -am 'Add some feature'`).
-4. Push to the branch (`git push origin feature/YourFeature`).
-5. Open a Pull Request.
+```tsx
+interface MicrosoftLoginButtonProps {
+  clientId: string;
+  redirectUri: string;
+  tenant?: string; // Default: 'common'
+  onSuccess?: (response: OAuthResponse) => void;
+  onFailure?: (error: OAuthError) => void;
+  responseMode?: 'query' | 'fragment';
+  prompt?: 'login' | 'none' | 'consent' | 'select_account';
+  loginHint?: string;
+  domainHint?: string;
+  children?: ReactNode;
+  className?: string;
+  disabled?: boolean;
+}
+```
 
-We encourage contributions for adding support for other providers, improving documentation, and fixing bugs. If you find this project helpful, please give it a star on GitHub to help others discover it!
+#### `<FacebookLoginButton />`, `<LinkedInLoginButton />`, `<AppleLoginButton />`
 
-### Resources
+Similar interfaces with provider-specific options. See TypeScript definitions for full details.
 
-- **GitHub Repository:** [OAuthify on GitHub](https://github.com/shekhardtu/oauthify)
-- **Github Auth Library** [Github on NPM](https://www.npmjs.com/package/github-auth-library)
-- **NPM Package:** [OAuthify on NPM](https://www.npmjs.com/package/oauthify)
-- **Google OAuth Documentation:** [Google Identity Platform](https://developers.google.com/identity/protocols/oauth2)
-- **GitHub OAuth Documentation:** [GitHub OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps)
+### Hooks
 
-### License
+#### `useOAuthify()`
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/shekhardtu/oauthify/blob/main/LICENSE.md) file for details.
+Access the OAuth context and state:
+
+```tsx
+const {
+  state,           // { loading, success, error, activeProvider }
+  setOnSuccess,    // Handle success globally
+  setOnFailure,    // Handle failure globally
+  setLoading,      // Set loading state
+  clearState,      // Clear all state
+  clearError       // Clear error state
+} = useOAuthify();
+```
+
+#### `useOAuthListener(options)`
+
+Listen for OAuth responses:
+
+```tsx
+useOAuthListener({
+  provider: 'google',  // Optional: filter by provider
+  onSuccess: (result) => console.log('Success:', result),
+  onError: (error) => console.error('Error:', error)
+});
+```
+
+### Custom Provider Integration
+
+Use `BaseOAuthButton` with any OAuth 2.0 provider:
+
+```tsx
+import { BaseOAuthButton, OAUTH_PROVIDERS } from 'oauthify';
+
+// Use a pre-configured provider
+<BaseOAuthButton
+  clientId="YOUR_CLIENT_ID"
+  redirectUri="YOUR_REDIRECT_URI"
+  provider={OAUTH_PROVIDERS.discord}
+>
+  Sign in with Discord
+</BaseOAuthButton>
+
+// Or configure your own
+const customProvider = {
+  name: 'custom',
+  authUrl: 'https://provider.com/oauth/authorize',
+  scope: 'read:user',
+  additionalParams: {
+    custom_param: 'value'
+  }
+};
+
+<BaseOAuthButton
+  clientId="YOUR_CLIENT_ID"
+  redirectUri="YOUR_REDIRECT_URI"
+  provider={customProvider}
+>
+  Sign in with Custom Provider
+</BaseOAuthButton>
+```
+
+## 🔄 Response Handling
+
+### Success Response
+
+```typescript
+interface OAuthResponse {
+  provider: string;    // 'google' | 'github' | etc.
+  code: string;        // Authorization code to exchange for tokens
+  state?: string;      // State parameter for CSRF protection
+  redirectUri?: string;
+}
+```
+
+### Error Response
+
+```typescript
+interface OAuthError {
+  provider: string;
+  error: string;
+  error_description?: string;
+  state?: string;
+}
+```
+
+## 🛡️ Security Best Practices
+
+1. **Never expose your Client Secret in frontend code**
+2. **Always exchange authorization codes for tokens on your backend**
+3. **Validate the `state` parameter to prevent CSRF attacks**
+4. **Use HTTPS in production**
+5. **Implement PKCE for public clients (mobile/SPA)**
+6. **Store tokens securely (httpOnly cookies recommended)**
+
+## 🎨 Styling
+
+All buttons accept standard React props and can be styled:
+
+```tsx
+<GoogleLoginButton
+  className="custom-google-btn"
+  style={{ padding: '10px 20px' }}
+  // ... other props
+>
+  <CustomIcon />
+  <span>Continue with Google</span>
+</GoogleLoginButton>
+```
+
+Default CSS classes:
+- `.oauth-google-btn`
+- `.oauth-github-btn`
+- `.oauth-microsoft-btn`
+- `.oauth-facebook-btn`
+- `.oauth-linkedin-btn`
+- `.oauth-apple-btn`
+
+## 🔧 Advanced Usage
+
+### Server-Side Token Exchange
+
+After receiving the authorization code, exchange it for tokens on your backend:
+
+```typescript
+// Example Node.js/Express backend
+app.post('/auth/callback', async (req, res) => {
+  const { code, provider } = req.body;
+
+  // Exchange code for tokens
+  const response = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      code,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      redirect_uri: process.env.REDIRECT_URI,
+      grant_type: 'authorization_code'
+    })
+  });
+
+  const tokens = await response.json();
+  // Store tokens securely and create user session
+});
+```
+
+### TypeScript Support
+
+OAuthify is built with TypeScript and provides full type definitions:
+
+```typescript
+import type {
+  OAuthResponse,
+  OAuthError,
+  GoogleOAuthConfig,
+  MicrosoftOAuthConfig
+} from 'oauthify';
+
+// Provider-specific configuration
+const googleConfig: GoogleOAuthConfig = {
+  name: 'google',
+  authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+  scope: 'openid profile email',
+  accessType: 'offline',
+  prompt: 'consent'
+};
+```
+
+## 📊 Bundle Size Comparison
+
+| Version | Size | Reduction |
+|---------|------|-----------|
+| v0.0.32 | ~22KB | - |
+| v0.0.35 | 12KB | 45% smaller |
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 📄 License
+
+ISC © [shekhardtu](https://github.com/shekhardtu)
+
+## 🙏 Acknowledgments
+
+Built with ❤️ using:
+- React
+- TypeScript
+- Rollup
+
+## 🔗 Links
+
+- [GitHub Repository](https://github.com/shekhardtu/oauthify)
+- [NPM Package](https://www.npmjs.com/package/oauthify)
+- [Report Issues](https://github.com/shekhardtu/oauthify/issues)
